@@ -9,6 +9,7 @@ import (
 func main() {
 	if len(os.Args) != 2 {
 		fmt.Printf("Usage: %s <redirect-url>\n", os.Args[0])
+		os.Exit(1)
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
