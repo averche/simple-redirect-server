@@ -1,19 +1,29 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
+	"net/url"
 	"os"
 )
 
 func main() {
 	if len(os.Args) != 2 {
-		fmt.Printf("Usage: %s <redirect-url>\n", os.Args[0])
-		os.Exit(1)
+		log.Fatalf("Usage: %s <redirect-base-address>\n", os.Args[0])
+	}
+
+	redirectBaseAddress, err := url.Parse(os.Args[1])
+	if err != nil {
+		log.Fatal(err.Error())
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, os.Args[1], http.StatusMovedPermanently)
+		redirectTo := *r.URL
+		redirectTo.Host = redirectBaseAddress.Host
+
+		log.Printf("%s -> %s\n", r.URL.String(), redirectTo.String())
+
+		http.Redirect(w, r, redirectTo.String(), http.StatusMovedPermanently)
 	})
 
 	http.ListenAndServe(":9090", nil)
