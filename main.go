@@ -16,10 +16,13 @@ func main() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+	log.Println("base address:", redirectBaseAddress)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		redirectTo := *r.URL
-		redirectTo.Host = redirectBaseAddress.Host
+		redirectTo, err := redirectBaseAddress.Parse(r.URL.Path)
+		if err != nil {
+			log.Printf("%s -> error: %s\n", r.URL.String(), err.Error())
+		}
 
 		log.Printf("%s -> %s\n", r.URL.String(), redirectTo.String())
 
