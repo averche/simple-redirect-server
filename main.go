@@ -22,6 +22,7 @@ func main() {
 		redirectTo, err := redirectBaseAddress.Parse(r.URL.Path)
 		if err != nil {
 			log.Printf("%s -> error: %s\n", r.URL.String(), err.Error())
+			return
 		}
 
 		log.Printf("%s -> %s\n", r.URL.String(), redirectTo.String())
