@@ -12,14 +12,14 @@ func main() {
 		log.Fatalf("Usage: %s <redirect-base-address>\n", os.Args[0])
 	}
 
-	redirectBaseAddress, err := url.Parse(os.Args[1])
+	base, err := url.Parse(os.Args[1])
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Fatal(err)
 	}
-	log.Println("base address:", redirectBaseAddress)
+	log.Println("Starting redirects to:", base)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		redirectTo, err := redirectBaseAddress.Parse(r.URL.Path)
+		redirectTo, err := base.Parse(r.URL.Path)
 		if err != nil {
 			log.Printf("%s -> error: %s\n", r.URL.String(), err.Error())
 			return
